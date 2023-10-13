@@ -13,7 +13,7 @@ public class SongClient {
     private final RestTemplate restTemplate;
 
     public CreateMetadataResponse postSongMetadata(CreateMetadataRequest request) {
-        return restTemplate.postForObject(URI.create("http://localhost:8086/songs"), request,
+        return restTemplate.postForObject(URI.create("http://song-service:8086/songs"), request,
             CreateMetadataResponse.class);
     }
 }

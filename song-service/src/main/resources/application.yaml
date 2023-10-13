@@ -1,2 +1,6 @@
 server:
   port: 8086
+
+spring:
+  jpa:
+    generate-ddl: true

@@ -4,23 +4,24 @@ This project is a multi-module Gradle setup featuring two interacting Spring Boo
 
 ### Resource Service
 
-- **Port**: Deployed on embedded Tomcat at `localhost:8085`.
+- **Port**: Deployed on embedded Tomcat in a docker container with a DNS name of `resource-service` and a `8085:8085` port mapping to host.
 - **Responsibilities**:
     - Accepts an MP3 file.
-    - Extracts and saves the content to a persistent store.
+    - Extracts and saves the content to a postgres DB deployed in a docker container with a DNS name of `resource-db` and a `5432:5432` port mapping to host.
     - Extracts metadata and sends it to the Song Service via HTTP.
     - Provides endpoints to fetch song content by ID and batch-remove song contents using a list of IDs.
 
 ### Song Service
 
-- **Port**: Deployed on embedded Tomcat at `localhost:8086`.
+- **Port**: Deployed on embedded Tomcat in a docker container with a DNS name of `song-service` and a `8086:8086` port mapping to host.
 - **Responsibilities**:
-    - Saves received metadata to a persistent store.
+    - Saves received metadata to a postgres DB deployed in a docker container with a DNS name of `song-db` and a `5433:5432` port mapping to host.
     - Provides endpoints to fetch song metadata by ID and batch-remove song metadata using a list of IDs.
 
 ## How to Run
 
-Run the services using IntelliJ IDEA or another IDE. Use the main classes `ResourceServiceApplication` and `SongServiceApplication`.
+Build the projects running `./gradlew assemble` in the root project directory.
+Run `docker-compose up` in the root project directory.
 
 ## Notes & Limitations
 
@@ -29,8 +30,8 @@ shortcuts and hardcoding have been implemented. In a production setting, the fol
 
 1. **Testing**: Currently, no tests are available. A TDD approach would be adopted.
 2. **Observability**: Logging and performance metrics would be added.
-3. **Persistent store**: At present, an in-memory DB is used. In the future lessons I will update it to a local docker container.
-3. **Architecture**: Domain-Driven Design (DDD) would be used for better decoupling.
+3. **Persistent store**: At present, db container ports are mapped to host ports for ease of debugging. In production, an `expose` directive would be used to expose ports for inter-container communication. Also, instead of generating DDL on the fly, a DB change management framework like Liquibase or Flyway would be used.
+3. **Architecture**: Domain-Driven Design / ports - adapters architecture would be used for better decoupling.
 4. **Localization**: Spring's `MessageSource` would be used for message resolution.
 5. **Error Handling**:
     - More robust error handling mechanisms would be in place.

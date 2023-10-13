@@ -12,10 +12,10 @@ public class DatabaseConfig {
     @Bean
     public DataSource dataSource() {
         return DataSourceBuilder.create()
-            .driverClassName("org.h2.Driver")
-            .url("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE")
-            .username("sa")
-            .password("sa")
+            .driverClassName("org.postgresql.Driver")
+            .url("jdbc:postgresql://resource-db:5432/resource-service")
+            .username("pg")
+            .password("pg")
             .build();
     }
 }
