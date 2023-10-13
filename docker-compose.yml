@@ -6,6 +6,7 @@ services:
       - "8085:8085"
     depends_on:
       - resource-db
+      - service-registry
 
   song-service:
     build: ./song-service
@@ -13,6 +14,7 @@ services:
       - "8086:8086"
     depends_on:
       - song-db
+      - service-registry
 
   resource-db:
     image: postgres:16
@@ -35,6 +37,11 @@ services:
       - "5433:5432"
     volumes:
       - song_db_data:/var/lib/postgresql/data
+
+  service-registry:
+    build: ./service-registry
+    ports:
+      - "8761:8761"
 
 volumes:
   resource_db_data:

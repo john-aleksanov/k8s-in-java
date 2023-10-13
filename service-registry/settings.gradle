@@ -4,6 +4,3 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = 'k8s-in-java'
-include 'resource-service'
-include 'song-service'

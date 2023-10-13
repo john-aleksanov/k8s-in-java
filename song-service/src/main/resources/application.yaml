@@ -1,6 +1,14 @@
+---
+spring:
+  application:
+    name: song-service
+  jpa:
+    generate-ddl: true
+
 server:
   port: 8086
 
-spring:
-  jpa:
-    generate-ddl: true
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://service-registry:8761/eureka/

@@ -1,5 +1,7 @@
 FROM amazoncorretto:21.0.0-alpine
 
-COPY ./build/libs/resource-service.jar resource-service.jar
+ENV SERVICE_NAME=resource-service
 
-ENTRYPOINT ["java", "-jar", "resource-service.jar"]
+COPY ./build/libs/${SERVICE_NAME}.jar ${SERVICE_NAME}.jar
+
+ENTRYPOINT java -jar ${SERVICE_NAME}.jar

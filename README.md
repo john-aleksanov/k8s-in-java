@@ -1,10 +1,10 @@
 ## Overview
 
-This project is a multi-module Gradle setup featuring two interacting Spring Boot microservices.
+This project is a multi-module Gradle setup featuring two interacting Spring Boot microservices and a separate `service-registry` microservice.
 
 ### Resource Service
 
-- **Port**: Deployed on embedded Tomcat in a docker container with a DNS name of `resource-service` and a `8085:8085` port mapping to host.
+- **Deployment**: Deployed on embedded Tomcat in a docker container with a DNS name of `resource-service` and a `8085:8085` port mapping to host.
 - **Responsibilities**:
     - Accepts an MP3 file.
     - Extracts and saves the content to a postgres DB deployed in a docker container with a DNS name of `resource-db` and a `5432:5432` port mapping to host.
@@ -13,14 +13,19 @@ This project is a multi-module Gradle setup featuring two interacting Spring Boo
 
 ### Song Service
 
-- **Port**: Deployed on embedded Tomcat in a docker container with a DNS name of `song-service` and a `8086:8086` port mapping to host.
+- **Deployment**: Deployed on embedded Tomcat in a docker container with a DNS name of `song-service` and a `8086:8086` port mapping to host.
 - **Responsibilities**:
     - Saves received metadata to a postgres DB deployed in a docker container with a DNS name of `song-db` and a `5433:5432` port mapping to host.
     - Provides endpoints to fetch song metadata by ID and batch-remove song metadata using a list of IDs.
 
+### Service Registry
+- **Deployment**: Deployed on embedded Tomcat in a docker container with a DNS name of `service-registry` and a `8761:8761` port mapping to host.
+- **Responsibilities**: This is a Eureka service registry that registers Eureka-aware applications and provides their coordinates to clients.
+
+
 ## How to Run
 
-Build the projects running `./gradlew assemble` in the root project directory.
+Build the projects running `./gradlew assemble` in the root project directory and in the `service-registry` directory.
 Run `docker-compose up` in the root project directory.
 
 ## Notes & Limitations
@@ -38,5 +43,6 @@ shortcuts and hardcoding have been implemented. In a production setting, the fol
     - HTTP error handling would be added in Resource Service's `SongClient` class.
 6. **Data Mapping**: Instead of using `ObjectMapper`, a well-configured framework like ModelMapper or MapStruct would be used.
 7. **Transactional Integrity**: The current setup lacks transactional boundaries, leading to potential data inconsistencies.
-8. **API first**: an OpenAPI description of the services' APIs would be provided.
-8. Etc., etc.
+8. **API first**: An OpenAPI description of the services' APIs would be provided.
+9. **Load balancing**: There is no load balancing employed by `Resource Service` in relation to `Song Service`. The first instance from Eureka is taken and used.
+10. Etc., etc.
