@@ -8,7 +8,6 @@ spring:
 server:
   port: 8086
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://service-registry:8761/eureka/
+logging:
+  level:
+    root: info

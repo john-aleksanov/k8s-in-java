@@ -8,6 +8,7 @@ import com.epam.training.microservices.resourceservice.resources.validation.Vali
 import com.epam.training.microservices.resourceservice.songclient.SongClient;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 
+@Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -40,8 +42,9 @@ public class ResourceController {
         var saved = resourceRepository.save(new ResourceEntity(file.getBytes()));
         var createMetadataRequest = metadataParser.parseMetadata(file.getInputStream());
         createMetadataRequest.setResourceId(String.valueOf(saved.getId()));
-        songClient.postSongMetadata(createMetadataRequest);
-        return new CreateResourceResponse(saved.getId());
+        var songMetadataResponse = songClient.postSongMetadata(createMetadataRequest);
+        log.info("Created song metadata: {}", songMetadataResponse);
+        return new CreateResourceResponse(saved.getId(), songMetadataResponse.id());
     }
 
     @GetMapping("/{id}")

@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "9fa9eae4-2b79-455e-a131-b03a8b3fcfdd",
-		"name": "Intro to microservices",
+		"name": "Microservices Expert",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "7243299"
 	},
@@ -25,12 +25,12 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8085/resources",
+							"raw": "http://localhost:30002/resources",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8085",
+							"port": "30002",
 							"path": [
 								"resources"
 							]
@@ -44,12 +44,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8085/resources/:id",
+							"raw": "http://localhost:30002/resources/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8085",
+							"port": "30002",
 							"path": [
 								"resources",
 								":id"
@@ -57,7 +57,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "3"
+									"value": "1"
 								}
 							]
 						}
@@ -70,12 +70,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8085/resources/:ids",
+							"raw": "http://localhost:30002/resources/:ids",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8085",
+							"port": "30002",
 							"path": [
 								"resources",
 								":ids"
@@ -83,7 +83,7 @@
 							"variable": [
 								{
 									"key": "ids",
-									"value": "1,2"
+									"value": "1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3"
 								}
 							]
 						}
@@ -110,12 +110,12 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8086/songs",
+							"raw": "http://localhost:30001/songs",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8086",
+							"port": "30001",
 							"path": [
 								"songs"
 							]
@@ -129,12 +129,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8086/songs/:id",
+							"raw": "http://localhost:30001/songs/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8086",
+							"port": "30001",
 							"path": [
 								"songs",
 								":id"
@@ -142,7 +142,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "5"
+									"value": "1"
 								}
 							]
 						}
@@ -155,12 +155,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8086/songs/:ids",
+							"raw": "http://localhost:30001/songs/:ids",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8086",
+							"port": "30001",
 							"path": [
 								"songs",
 								":ids"
@@ -168,7 +168,7 @@
 							"variable": [
 								{
 									"key": "ids",
-									"value": "1,2,3"
+									"value": "1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,"
 								}
 							]
 						}

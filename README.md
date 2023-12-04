@@ -1,32 +1,38 @@
 ## Overview
 
-This project is a multi-module Gradle setup featuring two interacting Spring Boot microservices and a separate `service-registry` microservice.
+This project is a multi-module Gradle setup featuring two interacting Spring Boot microservices: resource-service 
+and song-service deployed in a k8s cluster 'dev-marvel'.
 
 ### Resource Service
 
-- **Deployment**: Deployed on embedded Tomcat in a docker container with a DNS name of `resource-service` and a `8085:8085` port mapping to host.
+- **API**: see [this postman collection](k8s-overview.postman_collection.json)
 - **Responsibilities**:
-    - Accepts an MP3 file.
-    - Extracts and saves the content to a postgres DB deployed in a docker container with a DNS name of `resource-db` and a `5432:5432` port mapping to host.
+    - Accepts an MP3 file (the resource).
+    - Extracts and saves the content to a file-based H2 DB.
     - Extracts metadata and sends it to the Song Service via HTTP.
     - Provides endpoints to fetch song content by ID and batch-remove song contents using a list of IDs.
 
 ### Song Service
 
-- **Deployment**: Deployed on embedded Tomcat in a docker container with a DNS name of `song-service` and a `8086:8086` port mapping to host.
+- **API**: see [this postman collection](k8s-overview.postman_collection.json)
 - **Responsibilities**:
-    - Saves received metadata to a postgres DB deployed in a docker container with a DNS name of `song-db` and a `5433:5432` port mapping to host.
+    - Saves received metadata to a file-based H2 DB.
     - Provides endpoints to fetch song metadata by ID and batch-remove song metadata using a list of IDs.
-
-### Service Registry
-- **Deployment**: Deployed on embedded Tomcat in a docker container with a DNS name of `service-registry` and a `8761:8761` port mapping to host.
-- **Responsibilities**: This is a Eureka service registry that registers Eureka-aware applications and provides their coordinates to clients.
-
 
 ## How to Run
 
-Build the projects running `./gradlew assemble` in the root project directory and in the `service-registry` directory.
-Run `docker-compose up` in the root project directory.
+1. Build the projects running `./gradlew assemble` in the root project directory.
+2. Build docker images:
+```shell
+docker build -t johnsallison/song-service ./song-service
+docker build -t johnsallison/resource-service ./resource-service
+```
+3. Apply the k8s manifest files in the `song-service/k8s` and `resource-service/k8s` directories:
+```shell
+kubectl apply -f ./song-service/k8s/manifest.yml -f ./resource-service/k8s/manifest.yml
+```
+
+This will deploy a k8s cluster with a namespace `dev-marvel` and two replicas of each service.
 
 ## Notes & Limitations
 
@@ -35,7 +41,6 @@ shortcuts and hardcoding have been implemented. In a production setting, the fol
 
 1. **Testing**: Currently, no tests are available. A TDD approach would be adopted.
 2. **Observability**: Logging and performance metrics would be added.
-3. **Persistent store**: At present, db container ports are mapped to host ports for ease of debugging. In production, an `expose` directive would be used to expose ports for inter-container communication. Also, instead of generating DDL on the fly, a DB change management framework like Liquibase or Flyway would be used.
 3. **Architecture**: Domain-Driven Design / ports - adapters architecture would be used for better decoupling.
 4. **Localization**: Spring's `MessageSource` would be used for message resolution.
 5. **Error Handling**:
