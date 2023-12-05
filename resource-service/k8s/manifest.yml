@@ -38,3 +38,10 @@ spec:
       containers:
         - name: resource-service
           image: johnsallison/resource-service:latest
+          volumeMounts:
+            - name: storage
+              mountPath: /my-storage
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: local-pvc

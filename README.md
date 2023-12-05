@@ -1,3 +1,32 @@
+## Developments since preceding task
+This branch introduces the concept of persistence.
+1. A new [persistence manifest file](resource-service/k8s/persistence.yml) has been added for resource service. It 
+   creates a custom `local-storage` storage class, a `local-pv` persistent volume, a `local-pvc` persistent volume 
+   claim in the `dev-marvel` namespace.
+2. The [resource service manifest](resource-service/k8s/manifest.yml) has been updated to add a volume mmount that 
+   corresponds to the PVC above, to the resource-service deployment.
+
+To verify the volume works as intended:
+1. Deploy the two manifests:
+```shell
+kubectl apply -f resource-service/k8s/persistence.yml -f resource-service/k8s/manifest.yml
+```
+2. Get the names of the pods:
+```shell
+kubectl get pods -n dev-marvel
+```
+3. Execute the shell in one of the pods and create a file in the `my-storage` folder:
+```shell
+kubectl exec -it <pod1-name> -n dev-marvel /bin/sh
+touch /my-storage/my-file.txt
+exit
+```
+4. Execute the shell in the other pod and verify the file exists:
+```shell
+kubectl exec -it <pod2-name> -n dev-marvel /bin/sh
+cat /my-storage/my-file.txt
+```
+
 ## Overview
 
 This project is a multi-module Gradle setup featuring two interacting Spring Boot microservices: resource-service 
