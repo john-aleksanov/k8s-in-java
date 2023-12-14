@@ -46,9 +46,9 @@ spec:
           image: postgres:latest
           env:
             - name: POSTGRES_USER
-              value: "pg"
+              value: pg
             - name: POSTGRES_PASSWORD
-              value: "pg"
+              value: pg
           ports:
             - containerPort: 5432
           volumeMounts:

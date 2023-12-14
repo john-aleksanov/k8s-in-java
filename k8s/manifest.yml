@@ -12,3 +12,14 @@ metadata:
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: persistence-secrets
+  namespace: dev-marvel
+data:
+  song_db_user: cGc=
+  song_db_password: cGc=
+  resource_db_user: cGc=
+  resource_db_password: cGc=

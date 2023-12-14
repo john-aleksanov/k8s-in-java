@@ -46,14 +46,23 @@ spec:
           image: postgres:latest
           env:
             - name: POSTGRES_USER
-              value: "pg"
+              value: pg
             - name: POSTGRES_PASSWORD
-              value: "pg"
+              value: pg
           ports:
             - containerPort: 5432
           volumeMounts:
             - name: resource-pg
               mountPath: /var/lib/postgresql/data
+            - name: testfile
+              mountPath: /config
+      volumes:
+        - name: testfile
+          configMap:
+            name: resource-service-config-map
+            items:
+              - key: application.yml
+                path: application.yml
   volumeClaimTemplates:
     - metadata:
         name: resource-pg
@@ -74,7 +83,9 @@ metadata:
   name: resource-db
   namespace: dev-marvel
 spec:
+  type: NodePort
   ports:
     - port: 5432
+      nodePort: 30005
   selector:
     app: resource-db

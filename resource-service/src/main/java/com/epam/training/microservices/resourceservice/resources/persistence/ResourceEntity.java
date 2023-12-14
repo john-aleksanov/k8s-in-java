@@ -1,5 +1,6 @@
 package com.epam.training.microservices.resourceservice.resources.persistence;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,5 +27,6 @@ public class ResourceEntity {
     private Integer id;
 
     @Lob
+    @Column(columnDefinition = "bytea")
     private byte[] content;
 }

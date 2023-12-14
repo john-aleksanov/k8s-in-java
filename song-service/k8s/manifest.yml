@@ -20,7 +20,7 @@ metadata:
   name: song-service
   namespace: dev-marvel
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: song-service
@@ -32,3 +32,24 @@ spec:
       containers:
         - name: song-service
           image: johnsallison/song-service:latest
+          env:
+            - name: PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: persistence-secrets
+                  key: song_db_user
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: persistence-secrets
+                  key: song_db_password
+          volumeMounts:
+            - name: song-service-app-config
+              mountPath: /config
+      volumes:
+        - name: song-service-app-config
+          configMap:
+            name: song-service-config-map
+            items:
+              - key: application.yml
+                path: application.yml

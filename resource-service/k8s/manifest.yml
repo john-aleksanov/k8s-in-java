@@ -12,6 +12,11 @@ spec:
     - protocol: TCP
       port: 8086
       nodePort: 30002
+      name: web-server
+    - protocol: TCP
+      port: 5005
+      nodePort: 31000
+      name: debug
 
 ---
 apiVersion: apps/v1
@@ -20,7 +25,7 @@ metadata:
   name: resource-service
   namespace: dev-marvel
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: resource-service
@@ -32,3 +37,24 @@ spec:
       containers:
         - name: resource-service
           image: johnsallison/resource-service:latest
+          env:
+            - name: PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: persistence-secrets
+                  key: resource_db_user
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: persistence-secrets
+                  key: resource_db_password
+          volumeMounts:
+            - name: resource-service-app-config
+              mountPath: /config
+      volumes:
+        - name: resource-service-app-config
+          configMap:
+            name: resource-service-config-map
+            items:
+              - key: application.yml
+                path: application.yml

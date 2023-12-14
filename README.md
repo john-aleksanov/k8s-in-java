@@ -1,19 +1,10 @@
 ## Developments since preceding task
 
-This branch changes the persistence implementation from an in-memory H2 DB to two Postgres instances deployed as k8s
-StatefulSets. Both the resource service and song service have two k8s manifests.
+This branch introduces config maps and secrets. Now, Postgres usernames and passwords that each service uses are 
+stored as cluster secrets and ingested into the services upon cluster start. Additionally, Spring configuration
+files (application.yml) are stored in config maps and mounted to service containers as volumes. Finally, Flyway was 
+introduced to manage database versioning, and a bootstrap db schema script has been provided.
 
-One is a [persistence manifest](resource-service/k8s/persistence.yml), which defines:
-1) a 512Mi Persistence Volume (PV) based on a local host `/Users/Shared` directory;
-2) a StatefulSet pod that is based on the latest Postgres image with a `postgres` database and pg/pg user name and
-   password pair; and
-3) a Service that exposes the DB within the cluster on port 5432.
-
-The other is the actual [service manifest](resource-service/k8s/manifest.yml), which defines:
-1) a two-replica Deployment of the respective service (resource service and song service);
-2) a k8s Service that exposes the application on port 8086 within the k8s cluster and also outside of the cluster on 
-   port 30001 for song service and 30002 for resource service. 
- 
 To verify the setup:
 1. Build the project from the root directory:
 ```shell
@@ -29,15 +20,16 @@ docker push <repo>/song-service
 ```
 3. Apply all manifests:
 ```shell
-kubectl apply -f k8s/manifest.yml
-kubectl apply -f resource-service/k8s/persistence.yml -f resource-service/k8s/manifest.yml
-kubectl apply -f song-service/k8s/persistence.yml -f song-service/k8s/manifest.yml
+kubectl apply -f k8s -f resource-service/k8s f song-service/k8s
 ```
 
 4. Use [the postman collection](k8s-overview.postman_collection.json) to submit an mp3 file to resource service:
 ```shell
 POST http://localhost:30002/resources
 ```
+
+A convenience [deploy.sh script](./deploy.sh) has been provided to ease the deployment. Just replace the repo with 
+your own Docker Hub repo and run it to deploy the cluster.
 
 ## Overview
 
