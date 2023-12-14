@@ -1,24 +1,31 @@
 ## Developments since preceding task
-This branch introduces a new song property, genre. It's added as a separate flyway migration to update the DB schema 
-as well as throughout the song service. song service version is updated to 0.2 in the Deployment k8s object.
+This branch does not add any additional capabilities but just describes how to perform a rollback of song service to 
+version 0.1.
 
-To verify the setup:
-1. Switch to the previous branch:
+1. Check the deployment history:
 ```shell
-git checkout 2-deployment-and-config-2-probes
+kubectl rollout history deployment/song-service -n dev-marvel
 ```
-2. Deploy version 0.1 of the services:
+2. Check the revision history:
 ```shell
-./deploy.sh
+kubectl rollout history deployment/song-service -n dev-marvel --revision=<revision-number>
 ```
-3. Switch back to the current branch:
+3. Roll back to the previous deployment revision:
 ```shell
-git checkout 2-deployment-and-config-3-deployment-strategies
+kubectl rollout undo deployment/song-service -n dev-marvel
 ```
 
 4. Run the new version of the deploy script that will do a rolling update of song service:
+```shell
 ./deploy.sh
 ```
+
+It's worth noting though that since we introduced flyway migrations and [V2__add_song_genre.sql](./song-service/src/main/resources/db/migration/V2__add_song_genre.sql)
+got applied, rollbacks to v0.1 will fail as Flyway has applied the above script and noted it as applied in the metadata
+table. When the rollback is performed, the script is absent on the classpath, hence the failure. Some of the 
+workarounds to this problem are:
+1. Introduce scripts that, when applied, roll back the DB to the previous state.
+2. Make backups of the DB often and roll it back manually.
 
 ## Overview
 
