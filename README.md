@@ -1,35 +1,24 @@
 ## Developments since preceding task
 
-This branch introduces config maps and secrets. Now, Postgres usernames and passwords that each service uses are 
-stored as cluster secrets and ingested into the services upon cluster start. Additionally, Spring configuration
-files (application.yml) are stored in config maps and mounted to service containers as volumes. Finally, Flyway was 
-introduced to manage database versioning, and a bootstrap db schema script has been provided.
+This branch introduces liveness and readiness probes. Spring Boot Actuator has been added to serve as the provider.
+To model liveness and readiness failures, just edit either service's Deployment object and change the liveness and / 
+or readiness port to any other value, e.g., 8087. Reapply the manifests and observe the service failing to start.
 
 To verify the setup:
-1. Build the project from the root directory:
+1. Run the deploy script to build the project, build docker images and push them to the repo, and deploy the k8s 
+   cluster. Don't forget to change the repo in the script to your own Docker Hub repo.
 ```shell
-./gradlew build
+./deploy.sh
 ```
-2. Build the docker images and push to your repo in Docker Hub:
+2. Observe the deployments start and describe them to verify liveness / readiness probes have been applied:
 ```shell
-docker build -t <repo>/resource-service resource-service/
-docker push <repo>/resource-service
-
-docker build -t <repo>/song-service song-service/
-docker push <repo>/song-service
+kubectl describe deployment song-service -n dev-marvel
 ```
-3. Apply all manifests:
+You will see something like:
 ```shell
-kubectl apply -f k8s -f resource-service/k8s f song-service/k8s
+    Liveness:   http-get http://:8086/actuator/health delay=5s timeout=1s period=5s #success=1 #failure=2
+    Readiness:  http-get http://:8086/actuator/health delay=5s timeout=1s period=5s #success=1 #failure=2
 ```
-
-4. Use [the postman collection](k8s-overview.postman_collection.json) to submit an mp3 file to resource service:
-```shell
-POST http://localhost:30002/resources
-```
-
-A convenience [deploy.sh script](./deploy.sh) has been provided to ease the deployment. Just replace the repo with 
-your own Docker Hub repo and run it to deploy the cluster.
 
 ## Overview
 

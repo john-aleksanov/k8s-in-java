@@ -25,7 +25,7 @@ metadata:
   name: resource-service
   namespace: dev-marvel
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: resource-service
@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
         - name: resource-service
-          image: johnsallison/resource-service:latest
+          image: johnsallison/resource-service:0.1
           env:
             - name: PG_USER
               valueFrom:
@@ -51,6 +51,20 @@ spec:
           volumeMounts:
             - name: resource-service-app-config
               mountPath: /config
+          livenessProbe:
+            httpGet:
+              port: 8086
+              path: /actuator/health
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              port: 8086
+              path: /actuator/health
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 2
       volumes:
         - name: resource-service-app-config
           configMap:

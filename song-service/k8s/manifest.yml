@@ -20,7 +20,7 @@ metadata:
   name: song-service
   namespace: dev-marvel
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: song-service
@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: song-service
-          image: johnsallison/song-service:latest
+          image: johnsallison/song-service:0.1
           env:
             - name: PG_USER
               valueFrom:
@@ -46,6 +46,20 @@ spec:
           volumeMounts:
             - name: song-service-app-config
               mountPath: /config
+          livenessProbe:
+            httpGet:
+              port: 8086
+              path: /actuator/health
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              port: 8086
+              path: /actuator/health
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 2
       volumes:
         - name: song-service-app-config
           configMap:
