@@ -10,4 +10,5 @@ public class CreateSongRequest {
     private String length;
     private String resourceId;
     private String songYear;
+    private String genre;
 }

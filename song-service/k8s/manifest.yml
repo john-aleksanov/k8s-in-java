@@ -21,6 +21,11 @@ metadata:
   namespace: dev-marvel
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: song-service
@@ -31,7 +36,7 @@ spec:
     spec:
       containers:
         - name: song-service
-          image: johnsallison/song-service:0.1
+          image: johnsallison/song-service:0.2
           env:
             - name: PG_USER
               valueFrom:

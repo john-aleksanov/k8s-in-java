@@ -1,23 +1,23 @@
 ## Developments since preceding task
-
-This branch introduces liveness and readiness probes. Spring Boot Actuator has been added to serve as the provider.
-To model liveness and readiness failures, just edit either service's Deployment object and change the liveness and / 
-or readiness port to any other value, e.g., 8087. Reapply the manifests and observe the service failing to start.
+This branch introduces a new song property, genre. It's added as a separate flyway migration to update the DB schema 
+as well as throughout the song service. song service version is updated to 0.2 in the Deployment k8s object.
 
 To verify the setup:
-1. Run the deploy script to build the project, build docker images and push them to the repo, and deploy the k8s 
-   cluster. Don't forget to change the repo in the script to your own Docker Hub repo.
+1. Switch to the previous branch:
+```shell
+git checkout 2-deployment-and-config-2-probes
+```
+2. Deploy version 0.1 of the services:
 ```shell
 ./deploy.sh
 ```
-2. Observe the deployments start and describe them to verify liveness / readiness probes have been applied:
+3. Switch back to the current branch:
 ```shell
-kubectl describe deployment song-service -n dev-marvel
+git checkout 2-deployment-and-config-3-deployment-strategies
 ```
-You will see something like:
-```shell
-    Liveness:   http-get http://:8086/actuator/health delay=5s timeout=1s period=5s #success=1 #failure=2
-    Readiness:  http-get http://:8086/actuator/health delay=5s timeout=1s period=5s #success=1 #failure=2
+
+4. Run the new version of the deploy script that will do a rolling update of song service:
+./deploy.sh
 ```
 
 ## Overview

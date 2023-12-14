@@ -24,4 +24,5 @@ public class SongEntity {
     private String length;
     private String resourceId;
     private String songYear;
+    private String genre;
 }
