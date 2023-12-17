@@ -1,32 +1,28 @@
 ## Developments since preceding task
-This branch does not add any additional capabilities but just describes how to perform a rollback of song service to 
-version 0.1.
+This branch adds Helm to the party:
+1. The `./helm` directory that contains the parent Helm chart and the respective values.
+2. The `./resource-service/helm` and `./song-service/helm` directories that contain helm charts for the services.
 
-1. Check the deployment history:
+To deploy the application using Helm:
+1. Build the dependencies (resource-service and song-service):
 ```shell
-kubectl rollout history deployment/song-service -n dev-marvel
+cd helm
+helm dependencies build
 ```
+These commands will package the respective helm files into tarball archives in the `./helm/charts` directory
 2. Check the revision history:
 ```shell
-kubectl rollout history deployment/song-service -n dev-marvel --revision=<revision-number>
+helm install my-application .
 ```
-3. Roll back to the previous deployment revision:
+This will bring up the k8s cluster comprising the two services and all relating k8s objects.
+3. Check that the cluster is up and running:
 ```shell
-kubectl rollout undo deployment/song-service -n dev-marvel
+kubectl get pods,services,deployments,replicasets,statefulsets,configmaps,secrets --namespace dev-marvel
 ```
-
-4. Run the new version of the deploy script that will do a rolling update of song service:
+4. To spin up the cluster with some non-default values, run:
 ```shell
-./deploy.sh
+helm upgrade my-application . --set namespace=<your-namespace>, song-service.replicaCount=<value>,resource-service.replicaCount=<value>
 ```
-
-It's worth noting though that since we introduced flyway migrations and [V2__add_song_genre.sql](./song-service/src/main/resources/db/migration/V2__add_song_genre.sql)
-got applied, rollbacks to v0.1 will fail as Flyway has applied the above script and noted it as applied in the metadata
-table. When the rollback is performed, the script is absent on the classpath, hence the failure. Some of the 
-workarounds to this problem are:
-1. Introduce scripts that, when applied, roll back the DB to the previous state.
-2. Make backups of the DB often and roll it back manually.
-
 ## Overview
 
 This project is a multi-module Gradle setup featuring two interacting Spring Boot microservices: resource-service

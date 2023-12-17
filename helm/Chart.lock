@@ -1,0 +1,9 @@
+dependencies:
+- name: song-service
+  repository: file://../song-service/helm
+  version: 1.0.0
+- name: resource-service
+  repository: file://../resource-service/helm
+  version: 1.0.0
+digest: sha256:3d03ce1366e1f1cb1447247ccf5f6823da46c9af951980b6692b29be31f3a8b4
+generated: "2023-12-18T15:15:46.023029+04:00"
