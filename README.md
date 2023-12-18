@@ -1,9 +1,8 @@
 ## Developments since preceding task
-This branch adds Helm to the party:
-1. The `./helm` directory that contains the parent Helm chart and the respective values.
-2. The `./resource-service/helm` and `./song-service/helm` directories that contain helm charts for the services.
+This branch adds a [helper script](./resource-service/helm/templates/_helpers.tpl) for resource service containing 
+two labels: `version` and `current-date`. Those labels are then used in the resource service's config-map.
 
-To deploy the application using Helm:
+To deploy the application and check the labels:
 1. Build the dependencies (resource-service and song-service):
 ```shell
 cd helm
@@ -15,13 +14,13 @@ These commands will package the respective helm files into tarball archives in t
 helm install my-application .
 ```
 This will bring up the k8s cluster comprising the two services and all relating k8s objects.
-3. Check that the cluster is up and running:
+3. Check that the resource service's config map has the values:
 ```shell
-kubectl get pods,services,deployments,replicasets,statefulsets,configmaps,secrets --namespace dev-marvel
+kubectl get configmaps
 ```
-4. To spin up the cluster with some non-default values, run:
+4. Destroy the cluster:
 ```shell
-helm upgrade my-application . --set namespace=<your-namespace>, song-service.replicaCount=<value>,resource-service.replicaCount=<value>
+helm delete my-application
 ```
 ## Overview
 
