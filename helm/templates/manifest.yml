@@ -23,3 +23,59 @@ data:
   song_db_password: cGc=
   resource_db_user: cGc=
   resource_db_password: cGc=
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-nginx-songs
+  namespace: dev-marvel
+  labels:
+    name: ingress-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "15m"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ""
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/songs"
+            backend:
+              service:
+                name: song-service
+                port:
+                  number: 8086
+          - pathType: Prefix
+            path: "/resources"
+            backend:
+              service:
+                name: resource-service
+                port:
+                  number: 8086
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-nginx-resources-rewrite
+  namespace: dev-marvel
+  labels:
+    name: ingress-nginx-resources-rewrite
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "15m"
+    nginx.ingress.kubernetes.io/rewrite-target: "/resources"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ""
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            path: "/resources/v1"
+            backend:
+              service:
+                name: resource-service
+                port:
+                  number: 8086

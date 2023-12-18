@@ -1,27 +1,34 @@
 ## Developments since preceding task
-This branch adds a [helper script](./resource-service/helm/templates/_helpers.tpl) for resource service containing 
-two labels: `version` and `current-date`. Those labels are then used in the resource service's config-map.
+This branch adds an nginx ingress controller to the setup:
+* [Charts.yaml](./helm/Chart.yaml)
+* [k8s ingress](./helm/templates/manifest.yml)
+To provide an example of URL rewriting, the k8s ingress is configured to forward all requests for `/resources/v1` to 
+  `/resources`.
 
-To deploy the application and check the labels:
-1. Build the dependencies (resource-service and song-service):
+To deploy the application:
+1. Add the `ingress-nginx` repo to local helm:
 ```shell
-cd helm
-helm dependencies build
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
 ```
-These commands will package the respective helm files into tarball archives in the `./helm/charts` directory
-2. Check the revision history:
+2. Update parent chart dependencies:
+```shell
+cd ./helm
+helm dependencies update
+```
+3. Install the application:
 ```shell
 helm install my-application .
 ```
-This will bring up the k8s cluster comprising the two services and all relating k8s objects.
-3. Check that the resource service's config map has the values:
+4. Check that the cluster is up and running:
 ```shell
-kubectl get configmaps
+kubectl get pods,services,deployments,replicasets,statefulsets,configmaps,secrets,ingress --namespace dev-marvel
 ```
-4. Destroy the cluster:
+5. Send a request to add a song to the application (assuming you have a `123.mp3` file in your ~/Downloads folder):
 ```shell
-helm delete my-application
+curl -X POST -F "file=@~/Downloads/123.mp3" http://localhost:80/resources
 ```
+
 ## Overview
 
 This project is a multi-module Gradle setup featuring two interacting Spring Boot microservices: resource-service

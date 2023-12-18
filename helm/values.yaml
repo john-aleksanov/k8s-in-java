@@ -11,3 +11,7 @@ song-service:
 resource-service:
   namespace: dev-marvel
   replicaCount: 2
+
+ingress-nginx:
+  controller:
+    replicaCount: 2

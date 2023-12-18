@@ -16,3 +16,4 @@ out/
 
 ## Helm ##
 /helm/charts/
+**/Chart.lock
